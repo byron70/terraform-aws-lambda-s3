@@ -52,14 +52,11 @@ resource "aws_iam_policy" "logs" {
   policy = data.aws_iam_policy_document.logs[0].json
 }
 
-# TODO make this aws_iam_role_policy_attachment
-resource "aws_iam_policy_attachment" "logs" {
+resource "aws_iam_role_policy_attachment" "logs" {
   count      = local.global_count
-  name       = "${var.function_name}-logs"
-  roles      = [local.lambda_role_name]
+  role      = local.lambda_role_name
   policy_arn = aws_iam_policy.logs[0].arn
 }
-
 
 # Attach an additional policy if provided.
 resource "aws_iam_policy" "additional" {
@@ -69,11 +66,8 @@ resource "aws_iam_policy" "additional" {
   policy = var.policy.json
 }
 
- # TODO should make aws_iam_role_policy_attachment
-resource "aws_iam_policy_attachment" "additional" {
+resource "aws_iam_role_policy_attachment" "additional" {
   count = var.policy == null ? 0 : local.global_count
-
-  name       = var.function_name
-  roles      = [local.lambda_role_name]
+  role      = local.lambda_role_name
   policy_arn = aws_iam_policy.additional[0].arn
 }
