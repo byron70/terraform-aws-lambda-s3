@@ -52,6 +52,7 @@ resource "aws_iam_policy" "logs" {
   policy = data.aws_iam_policy_document.logs[0].json
 }
 
+# TODO make this aws_iam_role_policy_attachment
 resource "aws_iam_policy_attachment" "logs" {
   count      = local.global_count
   name       = "${var.function_name}-logs"
@@ -68,6 +69,7 @@ resource "aws_iam_policy" "additional" {
   policy = var.policy.json
 }
 
+ # TODO should make aws_iam_role_policy_attachment
 resource "aws_iam_policy_attachment" "additional" {
   count = var.policy == null ? 0 : local.global_count
 
